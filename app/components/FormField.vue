@@ -1,19 +1,19 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    name: string
-    label: string
-    placeholder: string
-    type?: string
-    required?: boolean
-    autocomplete?: string
+    name: string;
+    label: string;
+    placeholder: string;
+    type?: string;
+    required?: boolean;
+    autocomplete?: string;
     /** Renders a textarea instead of an input (the Message field). */
-    textarea?: boolean
+    textarea?: boolean;
     /** First field in a two-up row — capped at 280px in the comp. */
-    narrow?: boolean
+    narrow?: boolean;
     /** Server-side validation message for this field, if any. */
-    error?: string
-    disabled?: boolean
+    error?: string;
+    disabled?: boolean;
   }>(),
   {
     type: 'text',
@@ -22,27 +22,34 @@ withDefaults(
     textarea: false,
     narrow: false,
     error: undefined,
-    disabled: false
-  }
-)
+    disabled: false,
+  },
+);
 
-const model = defineModel<string>({ default: '' })
+const model = defineModel<string>({ default: '' });
 
-const id = useId()
-const errorId = `${id}-error`
+const id = useId();
+const errorId = `${id}-error`;
 </script>
 
 <template>
   <div
     class="flex flex-col items-start gap-sm2"
     :class="[
-      narrow ? 'w-full sm:max-w-[280px] sm:min-w-[240px] sm:flex-1' : 'w-full sm:min-w-px sm:flex-1',
-      textarea && 'h-[144px]'
+      narrow
+        ? 'w-full sm:max-w-[280px] sm:min-w-[240px] sm:flex-1'
+        : 'w-full sm:min-w-px sm:flex-1',
+      textarea && 'h-[144px]',
     ]"
   >
-    <label :for="id" class="flex items-start gap-xxs text-sm font-medium leading-5 text-dark-500">
+    <label
+      :for="id"
+      class="flex items-start gap-xxs text-sm font-medium leading-5 text-dark-500"
+    >
       {{ label }}
-      <span v-if="required" class="font-medium text-error" aria-hidden="true">*</span>
+      <span v-if="required" class="font-medium text-error" aria-hidden="true"
+        >*</span
+      >
     </label>
 
     <textarea
@@ -81,7 +88,7 @@ const errorId = `${id}-error`
           ? 'border-error focus:border-error focus:ring-error'
           : 'border-dark-50 focus:border-purple-500 focus:ring-purple-500'
       "
-    >
+    />
 
     <p v-if="error" :id="errorId" class="text-sm text-error">
       {{ error }}

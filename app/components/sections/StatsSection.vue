@@ -2,14 +2,28 @@
 // Each figure fades into the next brand colour, so the row reads as one
 // continuous white -> purple -> blue -> yellow sweep.
 const stats = [
-  { value: '23', label: 'Project realized', gradient: 'from-white to-purple-500' },
-  { value: '+20', label: 'Years of Trust', gradient: 'from-purple-500 to-blue-500' },
-  { value: '+8', label: 'Technology used', gradient: 'from-blue-500 to-yellow-500' }
-]
+  {
+    value: '23',
+    label: 'Project realized',
+    gradient: 'from-white to-purple-500',
+  },
+  {
+    value: '+20',
+    label: 'Years of Trust',
+    gradient: 'from-purple-500 to-blue-500',
+  },
+  {
+    value: '+8',
+    label: 'Technology used',
+    gradient: 'from-blue-500 to-yellow-500',
+  },
+];
 </script>
 
 <template>
-  <section class="relative overflow-hidden bg-dark-800 px-6 pb-20 pt-[120px] md:px-12 lg:px-20">
+  <section
+    class="relative overflow-hidden bg-dark-800 px-6 pb-20 pt-[120px] md:px-12 lg:px-20"
+  >
     <!-- Decorative linework sitting between the copy and the figures. The
          radial mask fades both ends so the lines don't collide with the text. -->
     <div
@@ -20,12 +34,12 @@ const stats = [
         src="/illustrations/stats-wave-glow.svg"
         alt=""
         class="absolute left-[-99px] top-[18px] h-[389px] w-[1180px] max-w-none"
-      >
+      />
       <img
         src="/illustrations/stats-wave-lines.svg"
         alt=""
         class="absolute left-[-99px] top-[18px] h-[389px] w-[1180px] max-w-none"
-      >
+      />
       <div
         class="absolute inset-0"
         style="
@@ -38,12 +52,19 @@ const stats = [
       />
     </div>
 
-    <div class="container-page relative flex flex-col items-center gap-24 lg:gap-[263px]">
-      <div class="flex w-full max-w-[901px] flex-col items-center gap-sm2 text-center">
-        <h2 class="text-[28px] font-bold text-gray-50 md:text-[32px]">Scale with confidence</h2>
+    <div
+      class="container-page relative flex flex-col items-center gap-24 lg:gap-[263px]"
+    >
+      <div
+        class="flex w-full max-w-[901px] flex-col items-center gap-sm2 text-center"
+      >
+        <h2 class="text-[28px] font-bold text-gray-50 md:text-[32px]">
+          Scale with confidence
+        </h2>
         <p class="max-w-[848px] text-base text-dark-50 md:text-xl">
-          Our growing expertise, diverse technology capabilities and experience in the Saudi market
-          let us deliver solutions that create measurable, sustainable business impact.
+          Our growing expertise, diverse technology capabilities and experience
+          in the Saudi market let us deliver solutions that create measurable,
+          sustainable business impact.
         </p>
       </div>
 

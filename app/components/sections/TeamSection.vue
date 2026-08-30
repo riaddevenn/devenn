@@ -7,16 +7,16 @@ const leaders = [
     role: 'Co-Founder',
     photo: '/team/abdulaziz-azzahrani.webp',
     frame: 'h-[154px] w-[135px]',
-    offset: 'left-[0.24%] top-[-6.54%] h-[113.09%] w-full'
+    offset: 'left-[0.24%] top-[-6.54%] h-[113.09%] w-full',
   },
   {
     name: 'Yousef Alaqarbah',
     role: 'Chief Executive Officer',
     photo: '/team/yousef-alaqarbah.webp',
     frame: 'h-[172px] w-[151px]',
-    offset: 'left-[-0.17%] top-[6%] size-[100.33%]'
-  }
-]
+    offset: 'left-[-0.17%] top-[6%] size-[100.33%]',
+  },
+];
 </script>
 
 <template>
@@ -37,15 +37,21 @@ const leaders = [
       />
     </div>
 
-    <div class="container-page relative flex flex-col items-start gap-[42px] px-0">
+    <div
+      class="container-page relative flex flex-col items-start gap-[42px] px-0"
+    >
       <div class="flex w-full items-center justify-center">
-        <div class="flex w-full max-w-[741px] flex-col items-center gap-sm2 text-center">
+        <div
+          class="flex w-full max-w-[741px] flex-col items-center gap-sm2 text-center"
+        >
           <h2 class="section-title">Executive management</h2>
           <p class="section-subtitle">The leadership behind our work.</p>
         </div>
       </div>
 
-      <ul class="flex w-full flex-wrap items-start justify-center gap-x-[60px] gap-y-10">
+      <ul
+        class="flex w-full flex-wrap items-start justify-center gap-x-[60px] gap-y-10"
+      >
         <li
           v-for="leader in leaders"
           :key="leader.name"
@@ -54,19 +60,26 @@ const leaders = [
           <div
             class="flex size-[170px] items-end justify-center overflow-hidden rounded-full border border-[#C6AEDE] bg-white"
           >
-            <div class="relative shrink-0 overflow-hidden rounded-xs" :class="leader.frame">
+            <div
+              class="relative shrink-0 overflow-hidden rounded-xs"
+              :class="leader.frame"
+            >
               <img
                 :src="leader.photo"
                 :alt="leader.name"
                 class="absolute max-w-none object-cover"
                 :class="leader.offset"
                 loading="lazy"
-              >
+              />
             </div>
           </div>
 
-          <div class="flex w-[245px] flex-col items-center gap-[10px] px-4 text-center">
-            <p class="text-[22px] font-semibold text-dark-500">{{ leader.name }}</p>
+          <div
+            class="flex w-[245px] flex-col items-center gap-[10px] px-4 text-center"
+          >
+            <p class="text-[22px] font-semibold text-dark-500">
+              {{ leader.name }}
+            </p>
             <p class="text-base text-dark-300">{{ leader.role }}</p>
           </div>
         </li>

@@ -3,34 +3,34 @@ const steps = [
   {
     icon: '/icons/route.svg',
     title: 'Discover',
-    body: 'Understand the constraint before naming a solution.'
+    body: 'Understand the constraint before naming a solution.',
   },
   {
     icon: '/icons/grid.svg',
     title: 'Define',
-    body: 'Scope, success measures and the delivery standard, agreed in writing.'
+    body: 'Scope, success measures and the delivery standard, agreed in writing.',
   },
   {
     icon: '/icons/palette.svg',
     title: 'Design',
-    body: 'Interfaces and architecture designed together, not in sequence.'
+    body: 'Interfaces and architecture designed together, not in sequence.',
   },
   {
     icon: '/icons/dataflow.svg',
     title: 'Build',
-    body: 'Short increments with visible progress and no reporting theatre.'
+    body: 'Short increments with visible progress and no reporting theatre.',
   },
   {
     icon: '/icons/container.svg',
     title: 'Deliver',
-    body: 'Launch, handover and the training that makes adoption stick.'
+    body: 'Launch, handover and the training that makes adoption stick.',
   },
   {
     icon: '/icons/rocket.svg',
     title: 'Evolve',
-    body: 'Measure, tune and extend as the organisation changes.'
-  }
-]
+    body: 'Measure, tune and extend as the organisation changes.',
+  },
+];
 </script>
 
 <template>
@@ -43,7 +43,9 @@ const steps = [
         <p class="eyebrow">Our Methodology</p>
         <div class="flex w-full flex-col gap-sm2 text-center">
           <h2 class="section-title">From challenge to continuous impact.</h2>
-          <p class="section-subtitle">Your proposed process works very well here.</p>
+          <p class="section-subtitle">
+            Your proposed process works very well here.
+          </p>
         </div>
       </div>
     </div>
@@ -51,12 +53,15 @@ const steps = [
     <div class="flex w-full flex-col items-center justify-center">
       <!-- Streamed linework running behind the step row, faded to white at
            both ends so it doesn't crowd the first and last columns. -->
-      <div class="relative -mb-6 hidden h-[117px] w-full overflow-hidden lg:block" aria-hidden="true">
+      <div
+        class="relative -mb-6 hidden h-[117px] w-full overflow-hidden lg:block"
+        aria-hidden="true"
+      >
         <img
           src="/illustrations/methodology-wave.svg"
           alt=""
           class="absolute left-[0.78px] top-[1.25px] h-[129.169px] w-[1119.438px] max-w-none"
-        >
+        />
         <div
           class="absolute inset-0"
           style="
@@ -69,13 +74,22 @@ const steps = [
         />
       </div>
 
-      <ol class="grid w-full grid-cols-1 items-start gap-2 sm:grid-cols-2 lg:grid-cols-6">
+      <ol
+        class="grid w-full grid-cols-1 items-start gap-2 sm:grid-cols-2 lg:grid-cols-6"
+      >
         <li
           v-for="step in steps"
           :key="step.title"
           class="flex flex-col items-start justify-center gap-[10px] rounded-xs p-[14px]"
         >
-          <img :src="step.icon" alt="" aria-hidden="true" class="size-6" width="24" height="24">
+          <img
+            :src="step.icon"
+            alt=""
+            aria-hidden="true"
+            class="size-6"
+            width="24"
+            height="24"
+          />
           <h3 class="text-xl font-semibold text-dark-500">{{ step.title }}</h3>
           <p class="w-full text-sm text-dark-300">{{ step.body }}</p>
         </li>
