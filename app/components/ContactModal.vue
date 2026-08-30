@@ -262,13 +262,7 @@ async function onSubmit() {
                   class="mt-px shrink-0 text-purple-600"
                 />
                 <p class="text-base text-dark-500">
-                  Your message is on its way to our team. If it's urgent, reach
-                  us directly at
-                  <a
-                    href="mailto:Contact@devenn.net"
-                    class="font-medium text-purple-600 underline"
-                    >Contact@devenn.net</a
-                  >.
+                  Your message is on its way to our team.
                 </p>
               </div>
 
