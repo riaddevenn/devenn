@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Header is a fixed 80px overlay — offset in-page anchors so section
+       headings don't slide underneath it. */
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    @apply bg-white font-sans text-dark-300 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-dark-500;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  /* Design grid: 1280px frame with 80px gutters -> 1120px of content. */
+  .container-page {
+    @apply mx-auto w-full max-w-container px-6 md:px-12 lg:px-20;
+  }
+
+  /* Small purple label that sits above most section headings. */
+  .eyebrow {
+    @apply text-sm font-semibold text-purple-500;
+  }
+
+  .section-title {
+    @apply text-[32px] font-bold leading-[1.2] md:text-[40px];
+  }
+
+  .section-subtitle {
+    @apply text-base leading-relaxed text-dark-300 md:text-lg;
+  }
+
+  /* The comp ships this as a 1578x946 raster. Reproduced in CSS so it stays
+     crisp at any density and costs no bytes. Tune --dot-gap to match. */
+  .bg-dot-grid {
+    --dot-gap: 15px;
+    background-image: radial-gradient(circle at 1px 1px, rgba(13, 10, 39, 0.07) 1px, transparent 0);
+    background-size: var(--dot-gap) var(--dot-gap);
+  }
+
+  /* Gradient stroke with a transparent interior, so the dot grid shows
+     through the card. get_design_context flattens this to solid #BB81F3 —
+     swap the ::before background for that colour to revert. */
+  .card-gradient-border {
+    @apply relative rounded-lg;
+  }
+
+  .card-gradient-border::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 rounded-[inherit];
+    padding: 1px;
+    background: linear-gradient(120deg, #bb81f3 0%, #bb81f3 38%, #64acf3 72%, #7fe3e0 100%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-sm2 rounded-xs bg-purple-600 px-4 py-[14px] text-base font-medium text-white transition-colors hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500;
+  }
+}
