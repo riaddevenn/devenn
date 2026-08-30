@@ -29,7 +29,26 @@ function getTransporter(event: H3Event) {
 
   transporter ??= nodemailer.createTransport({
     service: 'gmail',
-    auth: { user, pass },
+    // Google shows the app password as four groups of four; pasting it with the
+    // spaces intact is the norm. Gmail tolerates them today, but stripping
+    // costs nothing and removes a foot-gun when the value is retyped into
+    // Netlify's env var UI.
+    auth: { user, pass: pass.replace(/\s+/g, '') },
+
+    // Nodemailer's defaults are far too generous for a request a human is
+    // waiting on — the socket timeout alone is 10 minutes, which is what makes
+    // a stalled send look like the form has hung forever.
+    //
+    // `connectionTimeout` is the load-bearing one. smtp.gmail.com resolves to
+    // both an A and a AAAA record, and on a network where IPv6 cannot reach
+    // Google, nodemailer burns this entire timeout on the v6 address before
+    // falling back to v4 and succeeding. Measured cold: ~5.6s of stall at the
+    // 5s setting versus ~0.57s when it goes straight out over v4. 2s keeps the
+    // worst case near 2.6s while leaving 14x headroom over a healthy TCP+TLS
+    // handshake (~0.14s), and no connection failed at this setting in testing.
+    connectionTimeout: 2000,
+    greetingTimeout: 3000,
+    socketTimeout: 8000,
   });
 
   // NUXT_CONTACT_RECIPIENTS is a comma-separated list: the first address is the

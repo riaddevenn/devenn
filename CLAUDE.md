@@ -111,6 +111,15 @@ Defences, and what each is actually worth:
 - **Same-origin check** — a cross-site page always sends `Origin`, so a mismatch is abuse. A _missing_ `Origin` is allowed: browsers always send it cross-origin, so absence means a non-browser client this check never constrained anyway.
 - **Opaque errors** — SMTP failures quote the account name and auth state, so the real error is logged server-side and the client gets a generic 502.
 
+### Send latency
+
+A healthy send is **~1.8s**; worst case ~3.8s. Two things previously made it look like the form had hung, and both are worth recognising before debugging the code:
+
+1. **The dev server's first hit of `/api/contact` takes ~22s.** Vite lazily transforms and loads `nodemailer` on first touch of the route. It is a one-time cost per dev-server start — the second request is ~1.8s — and it does not exist in a production build. Do not chase this as an SMTP problem.
+2. **`smtp.gmail.com` has both an A and a AAAA record.** On a network that cannot reach Google over IPv6, nodemailer spends the whole `connectionTimeout` on the v6 address before falling back to v4 and succeeding. On nodemailer's default that is a *two-minute* stall, which is what "stuck sending forever" actually was. `connectionTimeout: 2000` in `mailer.ts` caps it at ~2.6s; measured cold, roughly half of fresh processes take the stalled path.
+
+The explicit timeouts matter more on Netlify than locally: a synchronous function is killed at **10s**, and a killed function returns a platform error rather than the handler's 502, so the submitter would get no usable message. Budget accordingly — function cold start on the ~45 MB bundle is part of the same 10s.
+
 The rate limiter is **best effort**: state lives in one function container, and Netlify recycles containers and runs several in parallel. It stops double-submits and naive scripts, not a distributed flood. If real abuse shows up, put Cloudflare Turnstile in front of the form or move the counter to a shared store — do not just raise the limit.
 
 ## Gotchas
