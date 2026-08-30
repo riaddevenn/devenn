@@ -1,17 +1,10 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-/**
- * Shape of the contact form body.
- *
- * Every field is length-capped. The endpoint is public, so these caps are the
- * first line of defence against someone posting a megabyte of text straight
- * into an email — the messages double as the copy shown under each field.
- */
 export const contactSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, 'Please enter your name.')
+    .min(1, 'Please enter your name.')
     .max(100, 'Please keep this under 100 characters.'),
 
   email: z
@@ -33,13 +26,13 @@ export const contactSchema = z.object({
   subject: z
     .string()
     .trim()
-    .min(2, 'Please enter a subject.')
+    .min(1, 'Please enter a subject.')
     .max(150, 'Please keep this under 150 characters.'),
 
   message: z
     .string()
     .trim()
-    .min(10, 'Please tell us a little more.')
+    .min(1, 'Please tell us a little more.')
     .max(5000, 'Please keep this under 5000 characters.'),
 
   /**
@@ -55,26 +48,26 @@ export const contactSchema = z.object({
    * fill and submit instantly. Forgeable by anything that bothers to look, so
    * it is a filter for lazy bots, not a security control.
    */
-  startedAt: z.number().int().positive().optional()
-})
+  startedAt: z.number().int().positive().optional(),
+});
 
-export type ContactBody = z.infer<typeof contactSchema>
+export type ContactBody = z.infer<typeof contactSchema>;
 
 /** The submission proper — the bot signals stripped off. */
-export type ContactSubmission = Omit<ContactBody, 'website' | 'startedAt'>
+export type ContactSubmission = Omit<ContactBody, 'website' | 'startedAt'>;
 
 /**
  * Flattens Zod issues into `{ field: firstMessage }` for the form UI.
  */
 export function fieldErrors(error: z.ZodError): Record<string, string> {
-  const errors: Record<string, string> = {}
+  const errors: Record<string, string> = {};
 
   for (const issue of error.issues) {
-    const field = String(issue.path[0] ?? '_')
-    errors[field] ??= issue.message
+    const field = String(issue.path[0] ?? '_');
+    errors[field] ??= issue.message;
   }
 
-  return errors
+  return errors;
 }
 
 /**
@@ -86,5 +79,5 @@ export function fieldErrors(error: z.ZodError): Record<string, string> {
  * is defence in depth rather than the only guard.
  */
 export function sanitizeHeader(value: string): string {
-  return value.replace(/[\r\n]+/g, ' ').trim()
+  return value.replace(/[\r\n]+/g, ' ').trim();
 }
