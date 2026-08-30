@@ -79,8 +79,6 @@ Netlify, built with **`nuxt build`** — not `nuxt generate`. This is the one th
 
 `generate` forces Nitro's `static` preset, which emits plain files and **silently drops `server/api/*`**. The page would still look perfect and the modal would still open; the form would just 404 on submit. `build` under the `netlify` preset keeps `/` prerendered (via `nitro.prerender.routes`) _and_ emits the API route as a function, so nothing is lost — `dist/index.html` is still a fully prerendered 39 KB document.
 
-Output split: static site → `dist/`, function → `.netlify/functions-internal/server/`. Both are set in `netlify.toml`, which also carries the baseline security headers.
-
 The function bundle is ~45 MB, mostly `sharp` (from `@nuxt/image`, 19 MB) and `better-sqlite3` (from `@nuxt/content`, 17 MB). Both are dead weight — nothing calls `NuxtImg` and nothing queries the `insights` collection — but both are under Netlify's limits, so this is a cold-start cost, not a blocker. Dropping either module reclaims its share.
 
 Building locally on Windows bundles `sharp` for `win32-x64`; Netlify builds on Linux and gets `linux-x64`. The architecture warning in a local build is an artifact of building here, not a deploy problem.
@@ -97,15 +95,17 @@ Building locally on Windows bundles `sharp` for `win32-x64`; Netlify builds on L
 | `server/utils/mailer.ts`                | Transport, `From`/`Reply-To` construction                        |
 | `server/utils/rate-limit.ts`            | In-memory sliding window                                         |
 
-**Credentials** are a Google **app password**, not the account password — 2-Step Verification must be on to generate one. They live in `runtimeConfig` (never `runtimeConfig.public`) and are supplied as `NUXT_GMAIL_USER` / `NUXT_GMAIL_APP_PASSWORD` / `NUXT_CONTACT_RECIPIENT`; see `.env.example`. Verified: the canary values do not appear anywhere in `dist/` or in the server bundle — Nuxt reads them at runtime rather than baking them into the artifact.
+**Credentials** are a Google **app password**, not the account password — 2-Step Verification must be on to generate one. They live in `runtimeConfig` (never `runtimeConfig.public`) and are supplied as `NUXT_GMAIL_USER` / `NUXT_GMAIL_APP_PASSWORD` / `NUXT_CONTACT_RECIPIENTS`; see `.env.example`. Verified: the canary values do not appear anywhere in `dist/` or in the server bundle — Nuxt reads them at runtime rather than baking them into the artifact.
+
+`NUXT_CONTACT_RECIPIENTS` is a comma-separated list — first address is the `To`, the rest are `Cc`. **The plural matters.** Nitro derives the env name via `snakeCase(key).toUpperCase()`, so the `CONTACT_RECIPIENTS` key reads `NUXT_CONTACT_RECIPIENTS`; a singular `NUXT_CONTACT_RECIPIENT` is silently ignored and mail quietly falls back to the authenticated account with nobody copied.
 
 Gmail rewrites `From` to the authenticated account unless the address is a verified alias, so mail always sends as your account and the submitter goes in `Reply-To`. Hitting reply in your inbox answers the lead.
 
 Defences, and what each is actually worth:
 
 - **Zod validation with length caps** — the authority on what is acceptable; caps stop a megabyte of text reaching your inbox.
-- **HTML escaping in the template** — submitted values are attacker-controlled and mail clients render HTML. Every interpolation goes through `escape()`.
-- **`sanitizeHeader`** strips CR/LF before anything reaches a header. Without it a newline in `name` appends arbitrary headers (`Bcc:`) and turns the form into an open relay.
+- **HTML escaping in the template** — this protects _your inbox_, not site visitors; it is not the classic XSS case. Gmail already strips `<script>` and event handlers, but it renders `<a href>`, so without `escape()` a submitter could land a clickable phishing link inside a notification that arrived through your own trusted pipeline. It also stops stray markup mangling the layout. Cheap, so keep it — but do not mistake it for load-bearing.
+- **`sanitizeHeader`** strips CR/LF before anything reaches a header. A newline in `name` would otherwise append arbitrary headers (`Bcc:`) and turn the form into an open relay — the risk being Google suspending the account for spam, not a defaced page. Nodemailer very likely rejects this already, so treat it as belt-and-braces over a consequence bad enough to be worth five lines.
 - **Honeypot + minimum fill time** — both answer with the _success_ response rather than an error, so a bot cannot learn which check caught it.
 - **Two rate limits** — 12 requests and 3 sends per IP per 10 min. Only successful sends count against the send limit, so a user who mistypes their email can never lock themselves out.
 - **Same-origin check** — a cross-site page always sends `Origin`, so a mismatch is abuse. A _missing_ `Origin` is allowed: browsers always send it cross-origin, so absence means a non-browser client this check never constrained anyway.
