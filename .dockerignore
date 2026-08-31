@@ -1,0 +1,10 @@
+node_modules
+.output
+.nuxt
+.netlify
+.data
+dist
+.git
+.env
+.env.*
+!.env.example

@@ -1,0 +1,13 @@
+services:
+  devenn:
+    container_name: devenn
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      # Gmail SMTP (contact form)
+      NUXT_GMAIL_USER: ${NUXT_GMAIL_USER}
+      NUXT_GMAIL_APP_PASSWORD: ${NUXT_GMAIL_APP_PASSWORD}
+      NUXT_CONTACT_RECIPIENTS: ${NUXT_CONTACT_RECIPIENTS}
